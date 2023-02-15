@@ -33,6 +33,8 @@ group :development, :test do
 
   gem 'pry-doc'
   gem 'pry-rails'
+
+  gem 'rspec-rails', '~> 6.0.0'
 end
 
 group :development do
