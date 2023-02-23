@@ -32,7 +32,7 @@ module RailsEditor
                        view_specs: false,
                        routing_specs: false,
                        helper_specs: false,
-                       controller_specs: false,　
+                       controller_specs: false,
                        request_specs: true
     end
 
