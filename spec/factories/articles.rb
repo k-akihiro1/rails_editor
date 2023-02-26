@@ -19,8 +19,9 @@
 #
 FactoryBot.define do
   factory :article do
-    title { "MyString" }
-    body { "MyText" }
-    user { nil }
+    title { Faker::Lorem.characters(number: Random.new.rand(1..6)) }
+    body { Faker::Lorem.characters(number: Random.new.rand(1..30)) }
+    #association :user, factory: :user
+    user
   end
 end
