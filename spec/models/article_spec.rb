@@ -20,5 +20,17 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "必要情報が揃っている" do
+    let(:article){build(:article)}
+    it "記事ができる" do
+      expect(article).to be_valid
+    end
+  end
+
+  context "タイトルの記入なし" do
+    let(:article){build(:article, title: nil)}
+    it "エラーが発生" do
+      expect(article).not_to be_valid
+    end
+  end
 end
