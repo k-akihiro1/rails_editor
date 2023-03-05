@@ -1,13 +1,13 @@
 require 'rails_helper'
 RSpec.describe "Api::V1::Articles", type: :request do
-  describe "GET /articles" do
+  describe "GET  /api/v1/articles" do
     subject { get(api_v1_articles_path) }
     # 作成日の異なる記事の作成
     let!(:article1) { create(:article, updated_at: 2.days.ago) }
     let!(:article2) { create(:article, updated_at: 1.days.ago) }
     let!(:article3) { create(:article, updated_at: Time.zone.now) }
 
-    fit "記事一覧が取得できる" do
+    it "記事一覧が取得できる" do
       # 記事の取得
       subject
       res = JSON.parse(response.body)
@@ -20,5 +20,36 @@ RSpec.describe "Api::V1::Articles", type: :request do
       # ユーザーのKeyが一致しているか確認
       expect(res[0]["user"].keys).to eq ["id", "name", "email"]
     end
+  end
+
+
+  describe "GET  /api/v1/articles/:id" do
+    subject { get(api_v1_article_path(article_id)) }
+    context "指定した id の記事が存在する場合" do
+      let(:article) { create(:article) }
+      let(:article_id) { article.id }
+
+      it "記事が取得できる" do
+        # 記事の取得
+        subject
+        res = JSON.parse(response.body)
+        expect(response).to have_http_status(:ok)
+        # 各記事の項目がAPIで取得した記事と作成した記事が一致するか検証
+        expect(res["id"]).to eq article.id
+        expect(res["title"]).to eq article.title
+        expect(res["body"]).to eq article.body
+        expect(res["updated_at"]).to be_present
+        expect(res["user"]["id"]).to eq article.user.id
+        expect(res["user"].keys).to eq ["id", "name", "email"]
+      end
+    end
+    context "指定した id の記事が存在しない場合" do
+      let(:article_id) { 10000 }
+
+      fit "記事が見つからない" do
+        expect { subject }.to raise_error ActiveRecord::RecordNotFound
+      end
+    end
+
   end
 end
