@@ -57,11 +57,12 @@ RSpec.describe "Api::V1::Articles", type: :request do
 
     context "不適切なパラメーターを送信した時" do
       let(:params) do
-        FactoryBot.attributes_for(:article)
-        binding.pry
+        {article: attributes_for(:article)}
       end
-      let(:current_user) { create(:user) }
+        let(:current_user) { create(:user) }
+
       fit "記事レコードが作成できる" do
+        binding.pry
         # 記事の取得
         expect{subject}.to change{Article.count}.by(1)
         res = JSON.parse(response.body)

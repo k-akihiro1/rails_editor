@@ -33,6 +33,7 @@ group :development, :test do
 
   gem 'pry-doc'
   gem 'pry-rails'
+  gem 'pry-nav'
 
   gem 'rspec-rails', '~> 5.1.2'
   gem 'faker', '~> 3.1', '>= 3.1.1'
