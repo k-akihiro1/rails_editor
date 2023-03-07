@@ -46,10 +46,35 @@ RSpec.describe "Api::V1::Articles", type: :request do
     context "指定した id の記事が存在しない場合" do
       let(:article_id) { 10000 }
 
-      fit "記事が見つからない" do
+      it "記事が見つからない" do
         expect { subject }.to raise_error ActiveRecord::RecordNotFound
       end
     end
-
   end
+
+  describe "POST /api/v1/articles/" do
+    subject { post(api_v1_articles_path, params: params) }
+
+    context "不適切なパラメーターを送信した時" do
+      let(:params) do
+        FactoryBot.attributes_for(:article)
+        binding.pry
+      end
+      let(:current_user) { create(:user) }
+      fit "記事レコードが作成できる" do
+        # 記事の取得
+        expect{subject}.to change{Article.count}.by(1)
+        res = JSON.parse(response.body)
+        # 各記事の項目がAPIで記事と作成した記事が一致するか検証
+        expect(res["title"]).to eq article.title
+        expect(res["body"]).to eq article.body
+        expect(response).to have_http_status(:ok)
+      end
+
+    context "不適切なパラメーターを送信した時"
+      it "レーコードの作成に失敗する"do
+      end
+    end
+  end
+
 end
