@@ -54,27 +54,23 @@ RSpec.describe "Api::V1::Articles", type: :request do
 
   describe "POST /api/v1/articles/" do
     subject { post(api_v1_articles_path, params: params) }
+    # 【モック】事前にcurennt_userがdeviceを用いて作成されるようモックで定義
+    before{allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user)}
 
-    context "不適切なパラメーターを送信した時" do
-      let(:params) do
-        {article: attributes_for(:article)}
-      end
-        let(:current_user) { create(:user) }
+    let(:params) do
+      {article: attributes_for(:article)}
+    end
+      let(:current_user) { create(:user) }
 
-      fit "記事レコードが作成できる" do
-        binding.pry
-        # 記事の取得
-        expect{subject}.to change{Article.count}.by(1)
-        res = JSON.parse(response.body)
-        # 各記事の項目がAPIで記事と作成した記事が一致するか検証
-        expect(res["title"]).to eq article.title
-        expect(res["body"]).to eq article.body
-        expect(response).to have_http_status(:ok)
-      end
+    it "記事レコードが作成できる" do
+      # 記事の取得
+      expect{subject}.to change{Article.count}.by(1)
+      res = JSON.parse(response.body)
+      # 各記事の項目がAPIで記事と作成した記事が一致するか検証
+      expect(res["title"]).to eq params[:article][:title]
+      expect(res["body"]).to eq params[:article][:body]
+      expect(response).to have_http_status(:ok)
 
-    context "不適切なパラメーターを送信した時"
-      it "レーコードの作成に失敗する"do
-      end
     end
   end
 
