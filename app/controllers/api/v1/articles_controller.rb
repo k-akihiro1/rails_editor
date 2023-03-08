@@ -16,6 +16,13 @@ module Api::V1
       render json: article, serializer: Api::V1::ArticleSerializer
     end
 
+    def update
+      binding.pry
+      article = current_user.articles.find(params[:id])
+      article.update!(article_params)
+      render json: article, serializer: Api::V1::ArticleSerializer
+    end
+
     private  # ストロングパラメーター（予期しない値を変更されてしまう脆弱性を防ぐ機能）
       def article_params
         params.require(:article).permit(:title, :body)  # titleとbodyの変更を許可
