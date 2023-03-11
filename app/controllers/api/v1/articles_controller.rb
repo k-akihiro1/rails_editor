@@ -22,6 +22,11 @@ module Api::V1
       render json: article, serializer: Api::V1::ArticleSerializer
     end
 
+    def destroy
+      article = current_user.articles.find(params[:id])
+      article.destroy!
+    end
+
     private  # ストロングパラメーター（予期しない値を変更されてしまう脆弱性を防ぐ機能）
       def article_params
         params.require(:article).permit(:title, :body)  # titleとbodyの変更を許可
