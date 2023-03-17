@@ -24,7 +24,8 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
       it "エラーが起きて登録できない" do
         expect { subject }.to change { User.count }.by(0)
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)["errors"]["name"]).to eq ["can't be blank"]
+        res=JSON.parse(response.body)
+        expect(res["errors"]["name"]).to eq ["can't be blank"]
       end
     end
     context "email が存在しないとき" do
@@ -32,7 +33,8 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
       it "エラーが起きて登録できない" do
         expect { subject }.to change { User.count }.by(0)
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)["errors"]["email"]).to eq ["can't be blank"]
+        res=JSON.parse(response.body)
+        expect(res["errors"]["email"]).to eq ["can't be blank"]
       end
     end
     context "password が存在しないとき" do
@@ -40,7 +42,8 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
       it "エラーが起きて登録できない" do
         expect { subject }.to change { User.count }.by(0)
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON.parse(response.body)["errors"]["password"]).to eq ["can't be blank"]
+        res=JSON.parse(response.body)
+        expect(res["errors"]["password"]).to eq ["can't be blank"]
       end
     end
   end
