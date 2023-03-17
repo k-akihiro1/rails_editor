@@ -82,7 +82,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
       # urennt_userが記事を作成した場合
       let(:article) { create(:article, user: current_user) }
 
-      fit "記事を更新できる" do
+      it "記事を更新できる" do
         expect { subject }.to change{article.reload.title}.to(params[:article][:title])&
                               change { article.reload.body }.from(article.body).to(params[:article][:body])
         expect(response).to have_http_status(:ok)
@@ -110,7 +110,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
     context "自分の記事を削除しようとしたとき" do
       let!(:article) { create(:article, user: current_user) }
 
-      fit "記事を削除できる" do
+      it "記事を削除できる" do
         expect { subject }.to change { Article.count }.by(-1)
         expect(response).to have_http_status(:no_content)
       end
@@ -120,7 +120,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
       let(:other_user) { create(:user) }
       let!(:article) { create(:article, user: other_user) }
 
-      fit "記事を削除できない" do
+      it "記事を削除できない" do
         expect { subject }.to raise_error(ActiveRecord::RecordNotFound) & change { Article.count }.by(0)
       end
     end
