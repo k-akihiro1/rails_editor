@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Auth::Sessions", type: :request do
   describe "POST /v1/auth/sign_in" do
     subject { post(api_v1_user_session_path, params: params) }
+
     context "User情報が存在するとき" do
       # ユーザーの作成
       let(:user){ create(:user)}
@@ -11,9 +12,9 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
       it "ユーザでログインができる" do
         subject
         expect(response).to have_http_status(:ok)
-        expect(response.header["access-token"]).to be_present
-        expect(response.header["client"]).to be_present
-        expect(response.header["uid"]).to be_present
+        expect(header["access-token"]).to be_present
+        expect(header["client"]).to be_present
+        expect(header["uid"]).to be_present
       end
     end
 
@@ -34,15 +35,16 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
         expect(response).to have_http_status(401)
 
         #heardersの情報がないことを確認
-        expect(response.header["access-token"]).to be_blank
-        expect(response.header["client"]).to be_blank
-        expect(response.header["uid"]).to be_blank
+        expect(header["access-token"]).to be_blank
+        expect(header["client"]).to be_blank
+        expect(header["uid"]).to be_blank
       end
     end
+
     context "password が存在しないとき" do
       let(:user){ create(:user)}
       let(:params) {attributes_for(:user,email: user.email, paasword: "hogehoge") }
-      it "エラーが起きて登録できない" do
+      fit "エラーが起きて登録できない" do
         subject
         #body情報
         res = JSON.parse(response.body)
@@ -56,9 +58,9 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
         expect(response).to have_http_status(401)
 
         #heardersの情報がないことを確認
-        expect(response.header["access-token"]).to be_blank
-        expect(response.header["client"]).to be_blank
-        expect(response.header["uid"]).to be_blank
+        expect(header["access-token"]).to be_blank
+        expect(header["client"]).to be_blank
+        expect(header["uid"]).to be_blank
       end
     end
   end
