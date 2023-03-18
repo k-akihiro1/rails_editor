@@ -44,7 +44,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
     context "password が存在しないとき" do
       let(:user){ create(:user)}
       let(:params) {attributes_for(:user,email: user.email, paasword: "hogehoge") }
-      fit "エラーが起きて登録できない" do
+      it "エラーが起きて登録できない" do
         subject
         #body情報
         res = JSON.parse(response.body)
@@ -71,7 +71,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
     context "ログアウトに必要な情報を送信したとき" do
 			let(:user) { create(:user) }
       let!(:headers) { user.create_new_auth_token }
-      fit "ログアウトできる" do
+      it "ログアウトできる" do
         subject
         #body情報
         res = JSON.parse(response.body)
@@ -79,13 +79,21 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
 
         #ステータスコードの確認
         expect(response).to have_http_status(:ok)
-
-        binding.pry
       end
     end
 
     context "誤った情報を送信したとき" do
+      let(:user) { create(:user) }
+      let!(:headers) { { "access-token" => "", "client" => "", "uid" => "" } }
       it "ログアウトできない" do
+        subject
+
+        #ステータスコードの確認
+        expect(response).to have_http_status(404)
+
+        #body情報
+        res = JSON.parse(response.body)
+        expect(res["errors"]).to include "User was not found or was not logged in."
       end
     end
   end
