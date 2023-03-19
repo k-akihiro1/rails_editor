@@ -11,6 +11,9 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
       let(:params) {attributes_for(:user, email: user.email, password: user.password) }
       it "ユーザでログインができる" do
         subject
+        #hearder情報
+        header = response.headers
+
         expect(response).to have_http_status(:ok)
         expect(header["access-token"]).to be_present
         expect(header["client"]).to be_present
