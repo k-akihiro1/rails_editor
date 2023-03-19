@@ -71,7 +71,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
     context "ログアウトに必要な情報を送信したとき" do
 			let(:user) { create(:user) }
       let!(:headers) { user.create_new_auth_token }
-      fit "ログアウトできる" do
+      it "ログアウトできる" do
         #header情報
         expect { subject }.to change { user.reload.tokens }.from(be_present).to(be_blank)
 
