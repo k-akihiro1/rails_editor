@@ -1,5 +1,6 @@
 module Api::V1
   class ArticlesController < BaseApiController
+    before_action :authenticate_user!, only: [:create, :update, :destroy]
     # http://localhost:3000/api/v1/articles(.:format)
     def index
       articles = Article.order('created_at desc')

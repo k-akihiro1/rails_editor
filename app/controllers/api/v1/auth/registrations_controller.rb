@@ -8,6 +8,6 @@ class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsCon
 
     #ユーザー更新時に使用
     def account_update_params
-        params.require(:registration).permit(:name, :email)
+      params.require(:registration).permit(:name, :email)
     end
 end
