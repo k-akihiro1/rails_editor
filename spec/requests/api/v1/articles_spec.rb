@@ -53,14 +53,14 @@ RSpec.describe "Api::V1::Articles", type: :request do
   end
 
   describe "POST /api/v1/articles/" do
-    subject { post(api_v1_articles_path, params: params) }
+    subject { post(api_v1_articles_path, params: params, headers: headers) }
     # 【モック】事前にcurennt_userがdeviceを用いて作成されるようモックで定義
-    before{allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user)}
+    # before{allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user)}
 
     let(:params) {{article: attributes_for(:article)}}
     let(:current_user) { create(:user) }
 
-    it "記事レコードが作成できる" do
+    fit "記事レコードが作成できる" do
       # 記事の取得
       expect{subject}.to change{Article.count}.by(1)
       res = JSON.parse(response.body)

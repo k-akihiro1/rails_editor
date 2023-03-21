@@ -1,5 +1,6 @@
 module Api::V1
   class ArticlesController < BaseApiController
+    before_action :authenticate_user!, only: [:create, :update, :destroy]
     # http://localhost:3000/api/v1/articles(.:format)
     def index
       articles = Article.order('created_at desc')
@@ -12,6 +13,7 @@ module Api::V1
     end
 
     def create
+      binding.pry
       article = current_user.articles.create!(article_params)
       render json: article, serializer: Api::V1::ArticleSerializer
     end
