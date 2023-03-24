@@ -3,12 +3,12 @@ module Api::V1
     before_action :authenticate_user!, only: [:create, :update, :destroy]
     # http://localhost:3000/api/v1/articles(.:format)
     def index
-      articles = Article.order('created_at desc')
+      articles = Article.published.order('created_at desc')
       render json: articles, each_serializer: Api::V1::ArticlePreviewSerializer
     end
 
     def show
-      article = Article.find(params[:id])
+      article = Article.published.find(params[:id])
       render json: article, serializer: Api::V1::ArticleSerializer
     end
 
@@ -30,7 +30,7 @@ module Api::V1
 
     private  # ストロングパラメーター（予期しない値を変更されてしまう脆弱性を防ぐ機能）
       def article_params
-        params.require(:article).permit(:title, :body)  # titleとbodyの変更を許可
+        params.require(:article).permit(:title, :body, :statuss)  # titleとbodyの変更を許可
       end
   end
 end
