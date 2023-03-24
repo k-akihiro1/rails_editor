@@ -24,5 +24,13 @@ FactoryBot.define do
     body { Faker::Lorem.characters(number: Random.new.rand(1..30)) }
     #association :user, factory: :user
     user
+
+    trait :draft do
+      status { :draft }
+    end
+
+    trait :published do
+      status { :published }
+    end
   end
 end
