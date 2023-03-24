@@ -67,8 +67,30 @@ RSpec.describe "Api::V1::Articles", type: :request do
     # 【モック】事前にcurennt_userがdeviceを用いて作成されるようモックで定義
     # before{allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user)}
     let(:headers) { current_user.create_new_auth_token }
-    let(:params) {{article: attributes_for(:article)}}
     let(:current_user) { create(:user) }
+
+    context"ステータス：公開　の場合" do
+      let(:params) { { article: attributes_for(:article, :published) } }
+      fit "記事のレコードが作成できる" do
+        # 記事の取得
+        expect{subject}.to change{Article.where(user_id: current_user.id).count}.by(1)
+        res = JSON.parse(response.body)
+        # 各記事の項目がAPIで記事と作成した記事が一致するか検証
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(response).to have_http_status(:ok)
+      end
+    end
+    context"ステータス：下書き　の場合" do
+      let(:params) { { article: attributes_for(:article, :draft) } }
+      it "記事のレコードが作成できる" do
+      end
+    end
+    context"ステータス　が指定されたもの以外の場合" do
+      let(:params) { { article: attributes_for(:article, :nil) } }
+      it "エラーになる" do
+      end
+    end
 
 
 
