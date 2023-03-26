@@ -85,7 +85,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
 
     context"ステータス：下書き　の場合" do
       let(:params) { { article: attributes_for(:article, :draft) } }
-      fit "記事のレコードが作成できる" do
+      it "記事のレコードが作成できる" do
         # 記事の取得
         expect{subject}.to change{Article.where(user_id: current_user.id).count}.by(1)
         res = JSON.parse(response.body)
@@ -98,8 +98,9 @@ RSpec.describe "Api::V1::Articles", type: :request do
       end
     end
     context"ステータス　が指定されたもの以外の場合" do
-      let(:params) { { article: attributes_for(:article, :nil) } }
-      it "エラーになる" do
+      let(:params) { { article: attributes_for(:article, status: :hogehoge) } }
+      fit "エラーになる" do
+        expect { subject }.to raise_error(ArgumentError)
       end
     end
   end
