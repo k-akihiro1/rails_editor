@@ -30,7 +30,7 @@ module Api::V1
 
     private  # ストロングパラメーター（予期しない値を変更されてしまう脆弱性を防ぐ機能）
       def article_params
-        params.require(:article).permit(:title, :body, :statuss)  # titleとbodyの変更を許可
+        params.require(:article).permit(:title, :body, :status)  # titleとbodyの変更を許可
       end
   end
 end

@@ -71,6 +71,20 @@ RSpec.describe "Api::V1::Articles", type: :request do
 
     context"ステータス：公開　の場合" do
       let(:params) { { article: attributes_for(:article, :published) } }
+      it "記事のレコードが作成できる" do
+        # 記事の取得
+        expect{subject}.to change{Article.where(user_id: current_user.id).count}.by(1)
+        res = JSON.parse(response.body)
+        # 各記事の項目がAPIで記事と作成した記事が一致するか検証
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(res["status"]).to eq "published"
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context"ステータス：下書き　の場合" do
+      let(:params) { { article: attributes_for(:article, :draft) } }
       fit "記事のレコードが作成できる" do
         # 記事の取得
         expect{subject}.to change{Article.where(user_id: current_user.id).count}.by(1)
@@ -78,12 +92,9 @@ RSpec.describe "Api::V1::Articles", type: :request do
         # 各記事の項目がAPIで記事と作成した記事が一致するか検証
         expect(res["title"]).to eq params[:article][:title]
         expect(res["body"]).to eq params[:article][:body]
+        expect(res["status"]).to eq "draft"
         expect(response).to have_http_status(:ok)
-      end
-    end
-    context"ステータス：下書き　の場合" do
-      let(:params) { { article: attributes_for(:article, :draft) } }
-      it "記事のレコードが作成できる" do
+
       end
     end
     context"ステータス　が指定されたもの以外の場合" do
@@ -91,23 +102,6 @@ RSpec.describe "Api::V1::Articles", type: :request do
       it "エラーになる" do
       end
     end
-
-
-
-
-
-
-    it "記事レコードが作成できる" do
-      # 記事の取得
-      expect{subject}.to change{Article.count}.by(1)
-      res = JSON.parse(response.body)
-      # 各記事の項目がAPIで記事と作成した記事が一致するか検証
-      expect(res["title"]).to eq params[:article][:title]
-      expect(res["body"]).to eq params[:article][:body]
-      expect(response).to have_http_status(:ok)
-    end
-
-
   end
 
   describe "PATCH /api/v1/articles/:id" do
