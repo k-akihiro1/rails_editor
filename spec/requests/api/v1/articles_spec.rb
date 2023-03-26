@@ -99,7 +99,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
     end
     context"ステータス　が指定されたもの以外の場合" do
       let(:params) { { article: attributes_for(:article, status: :hogehoge) } }
-      fit "エラーになる" do
+      it "エラーになる" do
         expect { subject }.to raise_error(ArgumentError)
       end
     end
@@ -110,16 +110,17 @@ RSpec.describe "Api::V1::Articles", type: :request do
     # 【モック】事前にcurennt_userがdeviceを用いて作成されるようモックで定義
     # before{allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user)}
     let(:headers) { current_user.create_new_auth_token }
-    let(:params) { { article: attributes_for(:article) } }
+    let(:params) { { article: attributes_for(:article ,:published) } }
     let(:current_user) { create(:user) }
 
     context "自分が所持している記事のレコードを更新しようとするとき" do
       # urennt_userが記事を作成した場合
-      let(:article) { create(:article, user: current_user) }
+      let(:article) { create(:article, :draft, user: current_user) }
 
       it "記事を更新できる" do
         expect { subject }.to change{article.reload.title}.to(params[:article][:title])&
-                              change { article.reload.body }.from(article.body).to(params[:article][:body])
+                              change { article.reload.body }.from(article.body).to(params[:article][:body])&
+                              change { article.reload.status }.from(article.status).to(params[:article][:status].to_s)
         expect(response).to have_http_status(:ok)
       end
     end
