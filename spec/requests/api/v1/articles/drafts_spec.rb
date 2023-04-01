@@ -11,8 +11,7 @@ RSpec.describe "Api::V1::Articles::Drafts", type: :request do
       # それ以外の記事
       let!(:article2) { create(:article, :draft) }
 
-      fit "自分の書いた下書きのみが取得できる" do
-        binding.pry
+      it "自分の書いた下書きのみが取得できる" do
         subject
         res = JSON.parse(response.body)
         # 配列の要素の数を確認
@@ -27,13 +26,28 @@ RSpec.describe "Api::V1::Articles::Drafts", type: :request do
   end
 
   describe "GET /articles/drafts/:id" do
+    subject { get(api_v1_articles_draft_path(article_id), headers: headers) }
     context "指定した id の記事が存在して" do
       context "対象の記事が自分が書いた下書きのとき" do
+        let(:article) { create(:article, :draft, user: current_user) }
+        let(:article_id) { article.id }
         it "記事の詳細を取得できる" do
+          subject
+          res = JSON.parse(response.body)
+          expect(res["id"]).to eq article.id
+          expect(res["title"]).to eq article.title
+          expect(res["body"]).to eq article.body
+          expect(res["status"]).to eq article.status
+          expect(res["updated_at"]).to be_present
+          expect(res["user"]["id"]).to eq article.user.id
+          expect(res["user"].keys).to eq ["id", "name", "email"]
         end
       end
       context "対象の記事が他のユーザーが書いた下書きのとき" do
+        let(:article) { create(:article, :draft) }
+        let(:article_id) { article.id }
         it "記事が見つからない" do
+          expect { subject }.to raise_error ActiveRecord::RecordNotFound
         end
       end
     end
