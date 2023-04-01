@@ -3,7 +3,7 @@ class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsCon
   private
     #ユーザー登録時に使用
     def sign_up_params
-      params.permit(:name, :email, :password,:password_confirmation)
+      params.permit(:name, :email, :password, :password_confirmation)
     end
 
     #ユーザー更新時に使用

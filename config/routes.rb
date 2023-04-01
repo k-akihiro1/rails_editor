@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
   root to: "home#index"
 
-  # reload 対策
-  get "sign_up", to: "home#index"
-  get "sign_in", to: "home#index"
-  get "articles/new", to: "home#index"
-  get "articles/:id", to: "home#index"
+  # # reload 対策
+  # get "sign_up", to: "home#index"
+  # get "sign_in", to: "home#index"
+  # get "articles/new", to: "home#index"
+  # get "articles/:id", to: "home#index"
 
   namespace :api do
     namespace :v1 do
@@ -13,6 +13,11 @@ Rails.application.routes.draw do
         registrations: "api/v1/auth/registrations",
       }
       resources :articles
+      namespace :articles do
+        resources :drafts, only: [:index, :show]
+      end
+      resources :articles
+
     end
   end
 end
