@@ -28,9 +28,9 @@ RSpec.describe "Api::V1::Articles::Drafts", type: :request do
   describe "GET /articles/drafts/:id" do
     subject { get(api_v1_articles_draft_path(article_id), headers: headers) }
     context "指定した id の記事が存在して" do
+      let(:article_id) { article.id }
       context "対象の記事が自分が書いた下書きのとき" do
         let(:article) { create(:article, :draft, user: current_user) }
-        let(:article_id) { article.id }
         it "記事の詳細を取得できる" do
           subject
           res = JSON.parse(response.body)
@@ -45,7 +45,6 @@ RSpec.describe "Api::V1::Articles::Drafts", type: :request do
       end
       context "対象の記事が他のユーザーが書いた下書きのとき" do
         let(:article) { create(:article, :draft) }
-        let(:article_id) { article.id }
         it "記事が見つからない" do
           expect { subject }.to raise_error ActiveRecord::RecordNotFound
         end
