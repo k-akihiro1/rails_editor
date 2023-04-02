@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: wonderful-editor
+    name: rails-editor
     env: ruby
     region: singapore
     plan: free
