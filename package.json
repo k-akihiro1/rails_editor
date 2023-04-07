@@ -1,5 +1,5 @@
 {
-  "name": "wonderful_editor",
+  "name": "rails_editor",
   "engines": {
     "node": "14.21",
     "yarn": "1.22"
